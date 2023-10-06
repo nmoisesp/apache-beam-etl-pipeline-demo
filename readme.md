@@ -31,7 +31,7 @@ mvn spring-boot:run
 
 ### REST API:
 ```shell
-curl -X GET  http://localhost:8080/api/v1/movies | json_reformat
+curl -X GET  http://localhost:8080/api/v1/producers | json_reformat
 ```
 <img src="./src/main/resources/images/curl_http_request.png" width="800"/>
 

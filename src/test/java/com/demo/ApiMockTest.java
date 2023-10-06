@@ -30,7 +30,7 @@ public class ApiMockTest {
     @Test
     public void shouldReturnMoviesAwardsListFromService() throws Exception {
         when(movieAwardService.getAll()).thenReturn(new AwardDTO(new Award(), StringUtils.EMPTY));
-        this.mockMvc.perform(get("/api/v1/movies")).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(get("/api/v1/producers")).andDo(print()).andExpect(status().isOk())
                 .andExpect(content().string(containsString("awards")));
     }
 }
