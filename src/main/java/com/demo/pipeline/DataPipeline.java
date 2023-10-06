@@ -54,7 +54,7 @@ public class DataPipeline {
                         .withUsername(DATABASE_USER)
                         .withPassword(StringUtil.EMPTY_STRING))
                 .withBatchSize(10L)
-                .withStatement(String.format("insert into %s (year_, title, studio, producers, winner) values (?,?,?,?,?);", "movies_raw_data"))
+                .withStatement(String.format("insert into %s (year_, titles, studios, producers, winner) values (?,?,?,?,?);", "movies_raw_data"))
                 .withPreparedStatementSetter(
                         ((element, statement) -> {
                             if (StringUtils.isNumeric(element.get(0))) {
