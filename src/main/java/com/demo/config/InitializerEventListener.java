@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class InitializerEventListener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(InitializerEventListener.class);
-
     @Autowired
     private DataPipelineService dataPipeline;
 
@@ -22,8 +20,7 @@ public class InitializerEventListener {
         try {
             dataPipeline.run();
         } catch (Exception e) {
-            LOG.error(e.getMessage());
-            throw new DataPipelineException(e.getMessage());
+            throw new DataPipelineException(e.getMessage(), e);
         }
     }
 }
