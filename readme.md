@@ -46,7 +46,7 @@ Table representing the Raw Data (not normalized) for analytics purpose:
 
 <img src="./src/main/resources/images/database_movies_raw_data_table.png" width="800"/>
 
-Table representing an aggregated table with calculated metrics (year of awards and their intervals):
+Table representing the aggregated data and calculated metrics (year of awards and their intervals):
 
 <img src="./src/main/resources/images/database_winner_table.png" width="800"/>
 
