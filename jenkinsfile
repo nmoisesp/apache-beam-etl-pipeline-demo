@@ -1,24 +1,28 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.9.4-eclipse-temurin-17-alpine'
+            args '-v /root/.m2:/root/.m2'
+        }
+    }
 
     stages {
-
+        
         stage("build") {
-
             steps {
                 echo 'build step started...'
+                sh 'mvn -B -DskipTests clean package'
             }
         }
 
         stage("test") {
-
             steps {
                 echo 'test step started...'
+                sh 'mvn test'
             }
         }
 
         stage("deploy") {
-
             steps {
                 echo 'deploy step started...'
             }
