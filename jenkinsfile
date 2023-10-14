@@ -5,19 +5,15 @@ pipeline {
         skipStagesAfterUnstable()
     }
 
-    stages {
-
-        stage("maven setup") {
+    stages {  
+        
+        stage("build") {     
             agent {
                 docker {
-                    image 'maven:3.8.6'
-            }    
-            steps {
-                echo 'maven setup finished...'
-            }
-        }        
-        
-        stage("build") {           
+                    image 'maven:latest'
+                    args '-v /root/.m2:/root/.m2'
+                }    
+            }                  
             steps {
                 echo 'build step started...'
                 sh 'mvn -B -DskipTests clean package'
@@ -25,6 +21,12 @@ pipeline {
         }
 
         stage("test") {
+            agent {
+                docker {
+                    image 'maven:latest'
+                    args '-v /root/.m2:/root/.m2'
+                }    
+            }            
             steps {
                 echo 'test step started...'
                 sh 'mvn test'
