@@ -9,7 +9,7 @@ pipeline {
         
         stage("build") {     
             agent {
-                any {
+                docker {
                     image 'maven:latest'
                     args '-v /root/.m2:/root/.m2'
                 }    
@@ -22,7 +22,7 @@ pipeline {
 
         stage("test") {
             agent {
-                any {
+                docker {
                     image 'maven:latest'
                     args '-v /root/.m2:/root/.m2'
                 }    
