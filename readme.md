@@ -20,7 +20,7 @@ USE CASE:
 Clone this repo and execute these commands from the root directory:
 
 ```shell
-mvn clean install
+mvn clean package
 ```
 <img src="./src/main/resources/images/mvn_clean_install.png" width="800"/>
 
@@ -31,7 +31,7 @@ mvn spring-boot:run
 
 ### REST API:
 ```shell
-curl -X GET  http://localhost:8080/api/v1/producers | json_reformat
+curl -X GET  http://localhost:8080/api/v1/producers/awards | json_reformat
 ```
 <img src="./src/main/resources/images/curl_http_request.png" width="800"/>
 

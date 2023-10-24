@@ -2,8 +2,7 @@ package com.demo.controller;
 
 import com.demo.dto.AwardDTO;
 import com.demo.exceptions.HttpRestException;
-import com.demo.service.MovieAwardService;
-import org.apache.beam.repackaged.core.org.apache.commons.lang3.StringUtils;
+import com.demo.service.ProducerAwardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,19 +12,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("api/v1/producers")
-public class RestController {
+public class ProducerAwardsController {
 
     @Autowired
-    private MovieAwardService movieAwardService;
+    private ProducerAwardService producerAwardService;
 
     @GetMapping(
-            value = StringUtils.EMPTY,
+            value = "/awards",
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.ALL_VALUE
     )
-    public ResponseEntity<AwardDTO> getAll() throws HttpRestException {
+    public ResponseEntity<AwardDTO> getProducersAwards() throws HttpRestException {
         try {
-            return ResponseEntity.ok().body(movieAwardService.getAll());
+            return ResponseEntity.ok().body(producerAwardService.getProducersAwardsAndInterval());
         } catch (Exception e) {
             throw new HttpRestException(e.getMessage());
         }

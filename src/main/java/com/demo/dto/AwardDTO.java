@@ -1,19 +1,18 @@
 package com.demo.dto;
 
 import com.demo.model.Award;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.beam.repackaged.core.org.apache.commons.lang3.StringUtils;
 
 @Getter
 @Setter
 public class AwardDTO {
 
+    @JsonUnwrapped
     private Award awards = new Award();
-    private String message = StringUtils.EMPTY;
 
-    public AwardDTO(Award awards, String message) {
+    public AwardDTO(Award awards) {
         this.awards = awards;
-        this.message = message;
     }
 }

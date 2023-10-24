@@ -13,12 +13,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class MovieAwardService {
+public class ProducerAwardService {
 
     @Autowired
     private WinnerRepository winnerRepository;
 
-    public AwardDTO getAll(){
+    public AwardDTO getProducersAwardsAndInterval(){
         List<WinnerEntity> winners = this.winnerRepository.findAll();
         Award award = new Award();
 
@@ -48,6 +48,6 @@ public class MovieAwardService {
                 award.getMax().add(maxInterval.get());
             }
         }
-        return new AwardDTO(award, "query executed successfully.");
+        return new AwardDTO(award);
     }
 }
