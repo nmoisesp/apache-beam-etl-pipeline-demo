@@ -15,8 +15,8 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  build-test:
+    name: Build & Test
     runs-on: ubuntu-latest
 
     steps:
@@ -33,13 +33,13 @@ jobs:
     - name: Test
       run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
 
-    - name: Report
+    - name: JUnit Report
       uses: dorny/test-reporter@v1
       if: always()
       with:
         name: Maven Tests
         path: target/surefire-reports/*.xml
-        report: java-junit
+        reporter: java-junit
         fail-on-error: true
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
