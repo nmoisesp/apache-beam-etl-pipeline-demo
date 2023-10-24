@@ -35,7 +35,7 @@ jobs:
 
     - name: Report
       uses: dorny/test-reporter@v1
-      if: aways()
+      if: always()
       with:
         name: Maven Tests
         path: target/surefire-reports/*.xml
