@@ -1,3 +1,5 @@
+[![Java CI with Maven](https://github.com/nmoisesp/apache-beam-etl-pipeline-demo/actions/workflows/ci-maven.yml/badge.svg?branch=main)](https://github.com/nmoisesp/apache-beam-etl-pipeline-demo/actions/workflows/ci-maven.yml)
+
 # Apache Beam ETL Pipeline & Spring Boot Rest API Demo
 
 USE CASE:
