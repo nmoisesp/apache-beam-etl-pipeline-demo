@@ -35,7 +35,7 @@ mvn spring-boot:run
 ```shell
 curl -X GET  http://localhost:8080/api/v1/producers/awards | json_reformat
 ```
-<img src="./src/main/resources/images/curl_http_request.png" width="800"/>
+<img src="src/main/resources/images/curl_http_request_local.png" width="800"/>
 
 ### H2 DATABASE:
 [H2 Database Console URL](http://localhost:8080/h2)
