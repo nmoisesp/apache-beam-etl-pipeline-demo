@@ -1,4 +1,4 @@
-package com.demo;
+package com.demo.controller;
 
 import com.demo.service.ProducerAwardService;
 import org.junit.jupiter.api.Test;
