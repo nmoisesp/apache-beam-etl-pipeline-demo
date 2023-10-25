@@ -2,7 +2,6 @@ package com.demo.controller;
 
 import com.demo.dto.AwardDTO;
 import com.demo.exceptions.HttpRestException;
-import com.demo.model.Award;
 import com.demo.service.ProducerAwardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
