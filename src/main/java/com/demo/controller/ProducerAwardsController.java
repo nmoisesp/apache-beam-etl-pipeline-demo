@@ -2,6 +2,7 @@ package com.demo.controller;
 
 import com.demo.dto.AwardDTO;
 import com.demo.exceptions.HttpRestException;
+import com.demo.model.Award;
 import com.demo.service.ProducerAwardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,7 +25,8 @@ public class ProducerAwardsController {
     )
     public ResponseEntity<AwardDTO> getProducersAwards() throws HttpRestException {
         try {
-            return ResponseEntity.ok().body(producerAwardService.getProducersAwardsAndInterval());
+            AwardDTO awardDto = producerAwardService.getProducersAwardsAndInterval().asDto();
+            return ResponseEntity.ok().body(awardDto);
         } catch (Exception e) {
             throw new HttpRestException(e.getMessage());
         }

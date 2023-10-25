@@ -1,18 +1,17 @@
 package com.demo.dto;
 
-import com.demo.model.Award;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 public class AwardDTO {
 
     @JsonUnwrapped
-    private Award awards = new Award();
-
-    public AwardDTO(Award awards) {
-        this.awards = awards;
-    }
+    private List<WinnerDTO> min = new ArrayList<>();
+    private List<WinnerDTO> max = new ArrayList<>();
 }

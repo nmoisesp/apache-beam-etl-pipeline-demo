@@ -1,6 +1,5 @@
 package com.demo.service;
 
-import com.demo.dto.AwardDTO;
 import com.demo.entity.WinnerEntity;
 import com.demo.model.Award;
 import com.demo.repository.WinnerRepository;
@@ -18,7 +17,7 @@ public class ProducerAwardService {
     @Autowired
     private WinnerRepository winnerRepository;
 
-    public AwardDTO getProducersAwardsAndInterval(){
+    public Award getProducersAwardsAndInterval(){
         List<WinnerEntity> winners = this.winnerRepository.findAll();
         Award award = new Award();
 
@@ -48,6 +47,6 @@ public class ProducerAwardService {
                 award.getMax().add(maxInterval.get());
             }
         }
-        return new AwardDTO(award);
+        return award;
     }
 }
