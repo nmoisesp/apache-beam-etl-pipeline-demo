@@ -3,9 +3,11 @@ package com.demo.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "winner")
 public class WinnerEntity {
@@ -27,16 +29,5 @@ public class WinnerEntity {
         this.previousWin = previousWin;
         this.followingWin = followingWin;
         this.interval = interval;
-    }
-
-    @Override
-    public String toString() {
-        return "WinnerEntity{" +
-                "id=" + id +
-                ", producer='" + producer + '\'' +
-                ", previousWin=" + previousWin +
-                ", followingWin=" + followingWin +
-                ", interval=" + interval +
-                '}';
     }
 }
