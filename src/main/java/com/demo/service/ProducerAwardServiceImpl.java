@@ -31,7 +31,7 @@ public class ProducerAwardServiceImpl implements ProducerAwardService {
         return award;
     }
 
-    private static void calculateIntervals(List<WinnerEntity> winners, Award award, Optional<WinnerEntity>  entity, Boolean isMax) {
+    private void calculateIntervals(List<WinnerEntity> winners, Award award, Optional<WinnerEntity>  entity, Boolean isMax) {
         if (entity.isPresent()) {
             List<WinnerEntity> intervalsCalculated = winners.stream().filter(element -> entity.get().getInterval()
                     .equals(element.getInterval())).collect(Collectors.toList());
