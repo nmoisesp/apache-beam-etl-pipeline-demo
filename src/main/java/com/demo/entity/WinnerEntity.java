@@ -16,17 +16,17 @@ public class WinnerEntity {
     private String producer;
     private Integer previousWin;
     private Integer followingWin;
-    private Integer intervals;
+    private Integer interval;
 
     public WinnerEntity(){
 
     }
 
-    public WinnerEntity(String producer, Integer previousWin, Integer followingWin, Integer intervals) {
+    public WinnerEntity(String producer, Integer previousWin, Integer followingWin, Integer interval) {
         this.producer = producer;
         this.previousWin = previousWin;
         this.followingWin = followingWin;
-        this.intervals = intervals;
+        this.interval = interval;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class WinnerEntity {
                 ", producer='" + producer + '\'' +
                 ", previousWin=" + previousWin +
                 ", followingWin=" + followingWin +
-                ", intervals=" + intervals +
+                ", interval=" + interval +
                 '}';
     }
 }

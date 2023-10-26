@@ -45,13 +45,58 @@ public class DataPipelineImpl implements DataPipeline {
         PCollection<List<String>> csvRows = rawData.apply("Skip header line", ParDo.of(new SkipCsvHeaderLineTransformation()));
         DataPipelineImpl.LOG.info("[Data Pipeline] Step 2 - Skipped the header line and applied data validation");
 
+        storeRawDataInDatabase(csvRows);
+
+        PCollection<List<String>> csvRowsFilteredByWinners = csvRows.apply("Filter movies by winners", ParDo.of(new FilterWinnersTransformation()));
+        DataPipelineImpl.LOG.info("[Data Pipeline] Step 4 - Filtered only the winners rows");
+
+        PCollection<KV<String, String>> producersByYear = csvRowsFilteredByWinners.apply("Parse the producer's column name",
+                ParDo.of(new ProducerNameParserTransformation()));
+        DataPipelineImpl.LOG.info("[Data Pipeline] Step 5 - Producers name parsed");
+
+        PCollection<KV<String, Iterable<String>>> producersGroupedByName = producersByYear.apply("Group producers by name", GroupByKey.<String, String>create());
+        DataPipelineImpl.LOG.info("[Data Pipeline] Step 6 - Producers grouped by name and their associated years of awards");
+
+        PCollection<KV<String, Iterable<Integer>>> filteredByAwardsInterval =
+                producersGroupedByName.apply("Calculate the years interval", ParDo.of(new CalculateYearsIntervalTransformation()));
+        DataPipelineImpl.LOG.info("[Data Pipeline] Step 7 - Calculated the interval between the years of awards");
+
+        storeAggregatedDataInDatabase(filteredByAwardsInterval);
+
+        pipeline.run().waitUntilFinish();
+        DataPipelineImpl.LOG.info("[Data Pipeline] Pipeline finished!");
+    }
+
+    private void storeAggregatedDataInDatabase(PCollection<KV<String, Iterable<Integer>>> filteredByAwardsInterval) {
+        PDone statementResult = filteredByAwardsInterval.apply(
+                JdbcIO.<KV<String, Iterable<Integer>>>write().withDataSourceConfiguration(JdbcIO.DataSourceConfiguration
+                                .create(DataPipelineImpl.DATABASE_DRIVER_NAME, DataPipelineImpl.DATABASE_JDBC_CONNECTION_URL)
+                                .withUsername(DataPipelineImpl.DATABASE_USER)
+                                .withPassword(StringUtil.EMPTY_STRING))
+                        .withBatchSize(10L)
+                        .withStatement(String.format("insert into %s (producer, previous_win, following_win, \"interval\") values (?,?,?,?);", "winner"))
+                        .withPreparedStatementSetter(
+                                ((element, statement) -> {
+                                    List<Integer> values = Lists.newArrayList(element.getValue());
+                                    statement.setString(1, element.getKey());
+                                    statement.setInt(2, values.get(0));
+                                    statement.setInt(3, values.get(1));
+                                    statement.setInt(4, values.get(2));
+                                }
+                                )
+                        )
+        );
+        DataPipelineImpl.LOG.info("[Data Pipeline] Step 8 - Aggregated data stored in database");
+    }
+
+    private void storeRawDataInDatabase(PCollection<List<String>> csvRows) {
         PDone rawDataStatementResult = csvRows.apply("Store the raw data",
                 JdbcIO.<List<String>>write().withDataSourceConfiguration(JdbcIO.DataSourceConfiguration
                                 .create(DataPipelineImpl.DATABASE_DRIVER_NAME, DataPipelineImpl.DATABASE_JDBC_CONNECTION_URL)
                                 .withUsername(DataPipelineImpl.DATABASE_USER)
                                 .withPassword(StringUtil.EMPTY_STRING))
                         .withBatchSize(10L)
-                        .withStatement(String.format("insert into %s (year_, titles, studios, producers, winner) values (?,?,?,?,?);", "movies_raw_data"))
+                        .withStatement(String.format("insert into %s (\"year\", titles, studios, producers, winner) values (?,?,?,?,?);", "movie_raw"))
                         .withPreparedStatementSetter(
                                 ((element, statement) -> {
                                     if (StringUtils.isNumeric(element.get(0))) {
@@ -70,45 +115,5 @@ public class DataPipelineImpl implements DataPipeline {
                         )
         );
         DataPipelineImpl.LOG.info("[Data Pipeline] Step 3 - Raw data stored in database");
-
-        PCollection<List<String>> csvRowsFilteredByWinners = csvRows.apply("Filter movies by winners",
-                ParDo.of(new FilterWinnersTransformation()));
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 4 - Filtered only the winners rows");
-
-        PCollection<KV<String, String>> producersByYear = csvRowsFilteredByWinners.apply("Parse the producer's column name",
-                ParDo.of(new ProducerNameParserTransformation()));
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 5 - Producers name parsed");
-
-        PCollection<KV<String, Iterable<String>>> producersGroupedByName = producersByYear.apply("Group producers by name",
-                GroupByKey.<String, String>create());
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 6 - Producers grouped by name and their associated years of awards");
-
-        PCollection<KV<String, Iterable<Integer>>> filteredByAwardsInterval =
-                producersGroupedByName.apply("Calculate the years interval", ParDo.of(new CalculateYearsIntervalTransformation()));
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 7 - Calculated the interval between the years of awards");
-
-        PDone statementResult = filteredByAwardsInterval.apply(
-                JdbcIO.<KV<String, Iterable<Integer>>>write().withDataSourceConfiguration(JdbcIO.DataSourceConfiguration
-                                .create(DataPipelineImpl.DATABASE_DRIVER_NAME, DataPipelineImpl.DATABASE_JDBC_CONNECTION_URL)
-                                .withUsername(DataPipelineImpl.DATABASE_USER)
-                                .withPassword(StringUtil.EMPTY_STRING))
-                        .withBatchSize(10L)
-                        .withStatement(String.format("insert into %s (producer, previous_win, following_win, intervals) values (?,?,?,?);", "winner"))
-                        .withPreparedStatementSetter(
-                                ((element, statement) -> {
-                                    List<Integer> values = Lists.newArrayList(element.getValue());
-                                    statement.setString(1, element.getKey());
-                                    statement.setInt(2, values.get(0));
-                                    statement.setInt(3, values.get(1));
-                                    statement.setInt(4, values.get(2));
-                                }
-                                )
-                        )
-        );
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 8 - Aggregated data stored in database");
-
-        pipeline.run().waitUntilFinish();
-
-        DataPipelineImpl.LOG.info("[Data Pipeline] Pipeline finished!");
     }
 }

@@ -1,5 +1,8 @@
-package com.demo.exceptions;
+package com.demo.exceptions.handler;
 
+import com.demo.exceptions.DataPipelineException;
+import com.demo.exceptions.GlobalApplicationException;
+import com.demo.exceptions.HttpRestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

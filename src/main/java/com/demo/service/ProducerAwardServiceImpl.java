@@ -23,12 +23,12 @@ public class ProducerAwardServiceImpl implements ProducerAwardService {
         Award award = new Award();
 
         if (winners != null) {
-            Optional<WinnerEntity> minInterval = winners.stream().min(Comparator.comparing(WinnerEntity::getIntervals));
-            Optional<WinnerEntity> maxInterval = winners.stream().max(Comparator.comparing(WinnerEntity::getIntervals));
+            Optional<WinnerEntity> minInterval = winners.stream().min(Comparator.comparing(WinnerEntity::getInterval));
+            Optional<WinnerEntity> maxInterval = winners.stream().max(Comparator.comparing(WinnerEntity::getInterval));
 
             if (minInterval.isPresent()) {
-                List<WinnerEntity> minWinners = winners.stream().filter(element -> minInterval.get().getIntervals()
-                        .equals(element.getIntervals())).collect(Collectors.toList());
+                List<WinnerEntity> minWinners = winners.stream().filter(element -> minInterval.get().getInterval()
+                        .equals(element.getInterval())).collect(Collectors.toList());
                 if (minWinners.size() > 0) {
                     minWinners.forEach(winner -> {
                         award.getMin().add(winner);
@@ -39,8 +39,8 @@ public class ProducerAwardServiceImpl implements ProducerAwardService {
             }
 
             if (maxInterval.isPresent()) {
-                List<WinnerEntity> maxWinners = winners.stream().filter(element -> maxInterval.get().getIntervals()
-                        .equals(element.getIntervals())).collect(Collectors.toList());
+                List<WinnerEntity> maxWinners = winners.stream().filter(element -> maxInterval.get().getInterval()
+                        .equals(element.getInterval())).collect(Collectors.toList());
                 maxWinners.forEach(winner -> {
                     award.getMax().add(winner);
                 });

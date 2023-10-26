@@ -1,6 +1,8 @@
 package com.demo;
 
 import com.demo.exceptions.GlobalApplicationException;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.apache.beam.repackaged.core.org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

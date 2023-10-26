@@ -35,10 +35,18 @@ class ProducerAwardsControllerTests {
 				.andExpect(jsonPath("min.[0].producer", is("Joel Silver")))
 				.andExpect(jsonPath("min.[0].previousWin", is(1990)))
 				.andExpect(jsonPath("min.[0].followingWin", is(1991)))
-				.andExpect(jsonPath("min.[0].intervals", is(1)))
+				.andExpect(jsonPath("min.[0].interval", is(1)))
+				.andExpect(jsonPath("min.[1].producer", is("Matthew Vaughn")))
+				.andExpect(jsonPath("min.[1].previousWin", is(2002)))
+				.andExpect(jsonPath("min.[1].followingWin", is(2003)))
+				.andExpect(jsonPath("min.[1].interval", is(1)))
 				.andExpect(jsonPath("max.[0].producer", is("Matthew Vaughn")))
-				.andExpect(jsonPath("max.[0].previousWin", is(2002)))
-				.andExpect(jsonPath("max.[0].followingWin", is(2015)))
-				.andExpect(jsonPath("max.[0].intervals", is(13)));
+				.andExpect(jsonPath("max.[0].previousWin", is(2015)))
+				.andExpect(jsonPath("max.[0].followingWin", is(2037)))
+				.andExpect(jsonPath("max.[0].interval", is(22)))
+				.andExpect(jsonPath("max.[1].producer", is("Matthew Vaughn")))
+				.andExpect(jsonPath("max.[1].previousWin", is(1980)))
+				.andExpect(jsonPath("max.[1].followingWin", is(2002)))
+				.andExpect(jsonPath("max.[1].interval", is(22)));
 	}
 }
