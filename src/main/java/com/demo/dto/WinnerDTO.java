@@ -18,9 +18,10 @@ public class WinnerDTO implements Comparable<WinnerDTO>{
     private Integer interval;
 
     @Override
-    public int compareTo(WinnerDTO o) {
-        if (StringUtils.isNotEmpty(o.producer) && StringUtils.isNotEmpty(this.producer))
-            return this.producer.compareTo(o.getProducer());
+    public int compareTo(WinnerDTO winnerDTO) {
+        if (StringUtils.isNotEmpty(winnerDTO.producer)
+                && StringUtils.isNotEmpty(this.producer))
+            return this.producer.compareTo(winnerDTO.getProducer());
         return -1;
     }
 }

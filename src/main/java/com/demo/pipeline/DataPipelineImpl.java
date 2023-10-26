@@ -36,35 +36,35 @@ public class DataPipelineImpl implements DataPipeline {
                 .withoutStrictParsing()
                 .as(DataPipelineOptions.class);
 
-        DataPipelineImpl.LOG.info("[Data Pipeline] Initiating the Apache Beam pipeline...");
+        LOG.info("[Data Pipeline] Initiating the Apache Beam pipeline...");
         Pipeline pipeline = Pipeline.create(options);
 
         PCollection<String> rawData = pipeline.apply("Load CSV File", TextIO.read().from(options.getInputFile()));
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 1 - CSV file loaded");
+        LOG.info("[Data Pipeline] Step 1 - CSV file loaded");
 
         PCollection<List<String>> csvRows = rawData.apply("Skip header line", ParDo.of(new SkipCsvHeaderLineTransformation()));
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 2 - Skipped the header line and applied data validation");
+        LOG.info("[Data Pipeline] Step 2 - Skipped the header line and applied data validation");
 
         storeRawDataInDatabase(csvRows);
 
         PCollection<List<String>> csvRowsFilteredByWinners = csvRows.apply("Filter movies by winners", ParDo.of(new FilterWinnersTransformation()));
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 4 - Filtered only the winners rows");
+        LOG.info("[Data Pipeline] Step 4 - Filtered only the winners rows");
 
         PCollection<KV<String, String>> producersByYear = csvRowsFilteredByWinners.apply("Parse the producer's column name",
                 ParDo.of(new ProducerNameParserTransformation()));
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 5 - Producers name parsed");
+        LOG.info("[Data Pipeline] Step 5 - Producers name parsed");
 
         PCollection<KV<String, Iterable<String>>> producersGroupedByName = producersByYear.apply("Group producers by name", GroupByKey.<String, String>create());
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 6 - Producers grouped by name and their associated years of awards");
+        LOG.info("[Data Pipeline] Step 6 - Producers grouped by name and their associated years of awards");
 
         PCollection<KV<String, Iterable<Integer>>> filteredByAwardsInterval =
                 producersGroupedByName.apply("Calculate the years interval", ParDo.of(new CalculateYearsIntervalTransformation()));
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 7 - Calculated the interval between the years of awards");
+        LOG.info("[Data Pipeline] Step 7 - Calculated the interval between the years of awards");
 
         storeAggregatedDataInDatabase(filteredByAwardsInterval);
 
         pipeline.run().waitUntilFinish();
-        DataPipelineImpl.LOG.info("[Data Pipeline] Pipeline finished!");
+        LOG.info("[Data Pipeline] Pipeline finished!");
     }
 
     private void storeAggregatedDataInDatabase(PCollection<KV<String, Iterable<Integer>>> filteredByAwardsInterval) {
@@ -86,7 +86,7 @@ public class DataPipelineImpl implements DataPipeline {
                                 )
                         )
         );
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 8 - Aggregated data stored in database");
+        LOG.info("[Data Pipeline] Step 8 - Aggregated data stored in database");
     }
 
     private void storeRawDataInDatabase(PCollection<List<String>> csvRows) {
@@ -114,6 +114,6 @@ public class DataPipelineImpl implements DataPipeline {
                                 )
                         )
         );
-        DataPipelineImpl.LOG.info("[Data Pipeline] Step 3 - Raw data stored in database");
+        LOG.info("[Data Pipeline] Step 3 - Raw data stored in database");
     }
 }

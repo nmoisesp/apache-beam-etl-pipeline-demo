@@ -22,32 +22,34 @@ public class ProducerAwardServiceImpl implements ProducerAwardService {
         List<WinnerEntity> winners = this.winnerRepository.findAll();
         Award award = new Award();
 
-        if (winners != null) {
-            Optional<WinnerEntity> minInterval = winners.stream().min(Comparator.comparing(WinnerEntity::getInterval));
-            Optional<WinnerEntity> maxInterval = winners.stream().max(Comparator.comparing(WinnerEntity::getInterval));
-
-            if (minInterval.isPresent()) {
-                List<WinnerEntity> minWinners = winners.stream().filter(element -> minInterval.get().getInterval()
-                        .equals(element.getInterval())).collect(Collectors.toList());
-                if (minWinners.size() > 0) {
-                    minWinners.forEach(winner -> {
-                        award.getMin().add(winner);
-                    });
-                } else {
-                    award.getMin().add(minInterval.get());
-                }
-            }
-
-            if (maxInterval.isPresent()) {
-                List<WinnerEntity> maxWinners = winners.stream().filter(element -> maxInterval.get().getInterval()
-                        .equals(element.getInterval())).collect(Collectors.toList());
-                maxWinners.forEach(winner -> {
-                    award.getMax().add(winner);
-                });
-            } else {
-                award.getMax().add(maxInterval.get());
-            }
+        if (winners != null && winners.size() > 0) {
+            calculateMinInterval(winners, award);
+            calculateMaxInterval(winners, award);
         }
         return award;
+    }
+
+    private static void calculateMaxInterval(List<WinnerEntity> winners, Award award) {
+        Optional<WinnerEntity> maxInterval = winners.stream().max(Comparator.comparing(WinnerEntity::getInterval));
+
+        if (maxInterval.isPresent()) {
+            List<WinnerEntity> maxWinners = winners.stream().filter(element -> maxInterval.get().getInterval()
+                    .equals(element.getInterval())).collect(Collectors.toList());
+            maxWinners.forEach(winner -> {
+                award.getMax().add(winner);
+            });
+        }
+    }
+
+    private static void calculateMinInterval(List<WinnerEntity> winners, Award award) {
+        Optional<WinnerEntity> minInterval = winners.stream().min(Comparator.comparing(WinnerEntity::getInterval));
+
+        if (minInterval.isPresent()) {
+            List<WinnerEntity> minWinners = winners.stream().filter(element -> minInterval.get().getInterval()
+                    .equals(element.getInterval())).collect(Collectors.toList());
+                minWinners.forEach(winner -> {
+                    award.getMin().add(winner);
+                });
+        }
     }
 }
